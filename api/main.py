@@ -21,14 +21,6 @@ def get_conn():
 async def startup():
     conn = get_conn()
     cursor = conn.cursor()
-    # cursor.execute("""
-    #     CREATE TABLE IF NOT EXISTS books (
-    #         id INT AUTO_INCREMENT PRIMARY KEY,
-    #         title VARCHAR(255),
-    #         author VARCHAR(255),
-    #         pages INT
-    #     )
-    # """)
     cursor.close()
     conn.close()
 
@@ -102,7 +94,6 @@ async def get_status():
     cursor = conn.cursor()
     cursor.execute("SELECT status_fan,status_lamp,status_water FROM iot where id = 1")
     a = cursor.fetchall()
-    # b = a[0][0], a[0][1] , a[0][2]
     print(a[0])
     cursor.close()
     conn.close()
