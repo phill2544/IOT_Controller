@@ -1,0 +1,347 @@
+{% load static %}
+{% load bootstrap_icons %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.css">
+    <style>
+        .card-img-top {
+            min-width: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-1 px-sm-2 px-0 bg-dark">
+            <div c
+                 lass="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a href="{% url 'home' %}"
+                   class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li>
+                        <a href="{% url 'home' %}" class="nav-link px-0 align-middle">
+                            <i class={% bs_icon 'speedometer2' size='25' %}</i> <span class="ms-1 d-none d-sm-inline"
+                                                                                      style="color: red">Dashboard</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url 'control' %}" class="nav-link px-0 align-middle">
+                            <i class="{% bs_icon 'toggles' size='25' %}</i> <span class=" ms-1 d-none d-sm-inline">Control</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+            </div>
+        </div>
+        <div class="col py-3">
+            <div class="row" >
+                <div class="col">
+                    <canvas id="myChart" style="width:100%;max-width:900px"></canvas>
+                    <canvas id="myChart1" style="width:100%;max-width:900px"></canvas>
+                </div>
+                <div class="col">
+                    <div class="d-flex flex-row mb-3" style="justify-content: center">
+                        <div class="row shadow p-3 mb-5 bg-white rounded">
+                            <div class="col d-flex justify-content-center">
+                                <img src="{% static 'istockphoto-1184204481-612x612.jpg' %}" width="70px">
+                            </div>
+                            <div class="col d-flex justify-content-center align-items-center">
+                                <h1 id="show_temp"></h1>
+                            </div>
+                        </div>
+                        <div class="row mx-5 shadow p-3 mb-5 bg-white rounded">
+                            <div class="col d-flex justify-content-center">
+                                <img src="{% static '360_F_143171244_6OYjlG1agJV0UJ4xE0uyMehSpjFR45P1.jpg' %}" width="70px">
+                            </div>
+                            <div class="col d-flex justify-content-center align-items-center">
+                                <h1 id="show_humid"></h1>
+                            </div>
+                        </div>
+                        <div class="row shadow p-3 mb-5 bg-white rounded">
+                            <div class="col d-flex justify-content-center">
+                                <img src="{% static 'eledtric-removebg-preview.png' %}" width="70px">
+                            </div>
+                            <div class="col d-flex justify-content-center align-items-center">
+                                 <h1 id="show_adc"></h1>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="table_id" class="display">
+                        <thead>
+                        <tr>
+                            <th>เวลา</th>
+                            <th>Temp</th>
+                            <th>Humid</th>
+                            <th>ADC</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{#<div class="d-flex flex-row bd-highlight mb-3">#}
+{#    <div>#}
+{#        <div class="card" style="width: 18rem;">#}
+{#            <img id="gif" src="{% static 'ef8cec64843d44cf830edd7a6fe9af3bC12nkAoIsKU6TGQ6-0.jpg' %}"#}
+{#                 style="width: 101%"#}
+{#                 class="card-img-top"#}
+{#                 alt="...">#}
+{#            <div class="card-body">#}
+{#                <a href="#" id="btn_fan" class="btn btn-success" style="width: 100%">ON</a>#}
+{#                <a href="#" class="btn btn-primary">off</a>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div>#}
+{#        <div class="card" style="width: 18rem;">#}
+{#            <img id="lamp" src="{% static 'lamp-open.jpg' %}" class="card-img-top" style="width: 52%; margin-left: 74px"#}
+{#                 alt="...">#}
+{#            <div class="card-body">#}
+{#                <a href="#" id="btn_lamp" class="btn btn-success" style="width: 100%">ON</a>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div>#}
+{#        <div class="card" style="width: 18rem;">#}
+{#            <img id="water" src="{% static 'water-1.png' %}" class="card-img-top"#}
+{#                 style="width: 76%;margin-left: 17px" alt="...">#}
+{#            <div class="card-body">#}
+{#                <a href="#" id="btn_water" class="btn btn-success" style="width: 100%">ON</a>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+
+
+{#<table>#}
+{#    <thead>#}
+{#    <tr>#}
+{#        <th>temp</th>#}
+{#        <th>humid</th>#}
+{#        <th>adc</th>#}
+{#    </tr>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#    <tr>#}
+{#        <td id="temp"></td>#}
+{#        <td id="humid"></td>#}
+{#        <td id="adc"></td>#}
+{#    </tr>#}
+{#    </tbody>#}
+{#</table>#}
+{#<button type="button" onclick="switch_change()" id="switch"></button>#}
+{#<button type="button" onclick="switch_change()" id="switch"></button>#}
+{#<button type="button" onclick="switch_change()" id="switch"></button>#}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.js"></script>
+
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js"></script>#}
+<script>
+    {% comment %} const gif = document.getElementById('gif');
+     const playBtn = document.getElementById('btn_fan');
+
+     let playing = false;
+
+     playBtn.addEventListener('click', function () {
+         if (!playing) {
+             playing = true;
+             gif.src = 'https://cdn.dribbble.com/users/3892547/screenshots/11096911/media/e953f570282731a9e81adb0f560d6627.gif';
+             playBtn.className = "btn btn-danger"
+             playBtn.innerHTML = "OFF"
+         } else {
+             playing = false;
+             gif.src = '{% static 'ef8cec64843d44cf830edd7a6fe9af3bC12nkAoIsKU6TGQ6-0.jpg' %}';
+             playBtn.className = "btn btn-success"
+             playBtn.innerHTML = "ON"
+         }
+     });
+
+
+     const lamp = document.getElementById('lamp');
+     const playBtn_lamp = document.getElementById('btn_lamp');
+
+     let playing_lamp = false;
+
+     playBtn_lamp.addEventListener('click', function () {
+         if (!playing_lamp) {
+             playing_lamp = true;
+             lamp.src = '{% static "lamp-open.jpg" %}';
+             playBtn_lamp.className = "btn btn-danger"
+             playBtn_lamp.innerHTML = "OFF"
+             lamp.style.width = "52%"
+             lamp.style.marginLeft = "74px"
+         } else {
+             playing_lamp = false;
+             lamp.src = '{% static 'lamp-off.jpg' %}';
+             lamp.style.width = "40%"
+             lamp.style.marginLeft = "90px"
+             playBtn_lamp.className = "btn btn-success"
+             playBtn_lamp.innerHTML = "ON"
+         }
+     });
+
+
+     const water = document.getElementById('water');
+     const playBtn_water = document.getElementById('btn_water');
+
+     let playing_water = false;
+
+     playBtn_water.addEventListener('click', function () {
+         if (!playing_water) {
+             playing_water = true;
+             water.src = '{% static "13megantje_wateringcan-1.gif" %}';
+             playBtn_water.className = "btn btn-danger"
+             playBtn_water.innerHTML = "OFF"
+         } else {
+             playing_water = false;
+             water.src = '{% static 'water-1.png' %}';
+             playBtn_water.className = "btn btn-success"
+             playBtn_water.innerHTML = "ON"
+         }
+     });{% endcomment %}
+
+
+    var xValues = [];
+    var temp = [];
+    var humid = [];
+    var adc = [];
+    inverval_timer = setInterval(function () {
+            var table = $('#table_id').DataTable();
+            $.ajax({
+                url: '{% url 'test' %}',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var time = new Date();
+                    console.log(data.temp)
+                    {#console.log(data.temp)#}
+                    {#document.getElementById('temp').innerHTML = data.temp#}
+                    {#document.getElementById('humid').innerHTML = data.humid#}
+                    {#document.getElementById('adc').innerHTML = data.adc#}
+                    {#console.log(temp.length)#}
+                    if (temp.length == 11) {
+                        temp.shift()
+                        humid.shift()
+                        adc.shift()
+
+                    }
+                    if (xValues.length == 11) {
+                        xValues.shift()
+                    }
+                    xValues.push(time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds())
+                    temp.push(data.temp)
+                    humid.push(data.humid)
+                    adc.push(data.adc)
+                    console.log(temp)
+                    table.row.add([xValues.slice(-1), temp.slice(-1), humid.slice(-1), adc.slice(-1)]).draw(false);
+                    table.order([0, 'desc']).draw();
+                    document.getElementById('show_temp').innerHTML = data.temp
+                    document.getElementById('show_humid').innerHTML = data.humid
+                    document.getElementById('show_adc').innerHTML = data.adc
+
+                    {#var row = $("<tr>");#}
+                    {#row.append($("<td>"+ xValues.slice(-1) +"</td>"))#}
+                    {#    .append($("<td>" + temp.slice(-1) +"</td>"))#}
+                    {#    .append($("<td>" + humid.slice(-1) +"</td>"))#}
+                    {#    .append($("<td>" + adc.slice(-1) +"</td>"))#}
+                    {##}
+                    {#$("#table_id tbody").append(row);#}
+
+
+                    {#let row = table.insertRow(-1)#}
+                    {#row.insertCell(0).innerHTML = xValues#}
+                    {#row.insertCell(1).innerHTML = temp#}
+                    {#row.insertCell(2).innerHTML = humid#}
+                    {#row.insertCell(3).innerHTML = adc#}
+                    {#console.log("temp")#}
+                    {#console.log(temp)#}
+                    {#console.log(humid)#}
+                    {#console.log(adc)#}
+                    {#$('#data-container').html(data.key);#}
+                }
+            });
+        },
+        5000
+    )
+    ;
+
+    inverval_timer = setInterval(function () {
+        new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: temp.slice(1,),
+                    borderColor: "red",
+                    fill: false,
+                    label: 'temp',
+                }, {
+                    data: humid.slice(1,),
+                    borderColor: "green",
+                    fill: false,
+                    label: 'humid',
+                }]
+            },
+            options: {
+                legend: {display: true},
+                animation: {
+                    duration: 0
+                }
+            }
+        });
+        new Chart("myChart1", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    data: adc.slice(1,),
+                    borderColor: "blue",
+                    fill: false,
+                    label: 'adc',
+                }]
+            },
+            options: {
+                legend: {display: true},
+                animation: {
+                    duration: 0
+                }
+            }
+        });
+    }, 5000);
+
+
+    $(document).ready(function () {
+        var table = $('#table_id').DataTable({
+            order: [[0, 'desc']]
+        });
+    });
+    var inverval_timer;
+
+    //Time in milliseconds [1 second = 1000 milliseconds ]
+
+
+    //IF you want to stop above timer
+    function stop_timer() {
+        clearInterval(inverval_timer);
+    }
+
+
+</script>
+</body>
+</html>
